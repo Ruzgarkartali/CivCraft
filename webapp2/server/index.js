@@ -35,6 +35,14 @@ app.get("/session/:id", (req,res) => {
     console.log("Query : " + q.sql);
 });
 
+app.get("/session/actions/:jobId", (req,res) => {
+    const q = db.query(reqs["GET_ACTIONS"],[req.params.jobId],(e,r)=>{
+        if(e) res.send({e:e});
+        else  res.send(r);
+    });
+    console.log("Query : " + q.sql);
+})
+
 app.listen(3001,()=>{
     console.log("running server");
 });
