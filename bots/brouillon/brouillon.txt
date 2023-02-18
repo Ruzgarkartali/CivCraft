@@ -1,0 +1,94 @@
+async function goToTree(){
+	let tree =  nearestTree();
+	console.log("tree :" + tree.name);
+	const defaultMove = new Movements(bot);
+	bot.pathfinder.setMovements(defaultMove);
+	let p = tree.position;
+	console.log(p);
+    bot.pathfinder.setGoal(new GoalNear(p.x, p.y, p.z, 1));
+
+}
+
+
+function goTo(tree){
+	bot.pathfinder.setMovements(defaultMove);
+	let p = tree.position;
+    bot.pathfinder.setGoal(new GoalNear(p.x, p.y, p.z, 1));
+
+}
+
+async function nearestTree(){
+	let treeTypes =['oak_log','spruce_log','birch_log','jungle_log',
+	'acacia_log','dark_oak_log','stripped_oak_log','stripped_spruce_log',
+	'stripped_birch_log','stripped_jungle_log','stripped_acacia_log',
+	'stripped_dark_oak_log'];
+	let min = Infinity;
+	let nearest =null;
+	for(let i = 0; i < treeTypes.length; i++) { 
+		console.log("arbre : "+ treeTypes[i]);
+		let tree = bot.findBlock({
+			matching: mcData.blocksByName[treeTypes[i]].id,
+			maxDistance: 20
+		});
+		if(tree == null) continue
+		else {
+			console.log(bot.entity.position.distanceTo(tree.position));
+			if (bot.entity.position.distanceTo(tree.position) < min){
+				min = bot.entity.position.distanceTo(tree.position)
+				nearest = tree;
+			}
+		}
+	}
+	return nearest;
+}
+
+/*
+async function workLoop() {
+	let blk = bot.findBlock({
+		//attention doit être fait pour tout type de buche
+		matching: mcData.blocksByName['oak_log'].id,
+	});
+    console.log(blk);
+	if (blk) {
+		if (bot.entity.position.distanceTo(blk.position) < 2) {
+			
+		}
+		//if ((bot.entity.position) {}
+		else{
+			goToBois(blk);
+			bot.lookAt(blk.position);
+			bot.setControlState('forward', true);
+		}
+	}
+}
+async function goToBois(bois) {
+	let botP = bot.entity.position;
+	let boisP = bois.position;
+	var diff = [Math.floor(botP.x - boisP.x),Math.floor( botP.y - boisP.y),Math.floor( botP.z - boisP.z)]; 
+	console.log(diff);
+	if (Math.abs(diff[0]) < Math.abs(diff[2])){
+		bot.lookAt(new vec3.Vec3(boisP.x,botP.y,botP.z));
+	}
+}*/
+
+/*
+bot.on("diggingCompleted",(tree)=>{
+	if(tree){
+		console.log("j'ai fini");
+	}
+}); */
+
+
+/*
+async function mineLoop(facing,level=16){
+
+	var blocksList = utils.BlocksToDig(bot,facing);
+
+	blocksList.forEach(async block => {if(block.name !='air') await utils.dig(bot,owner,block);});
+	
+	var nextStep = utils.nextStep(bot,facing);
+
+	if(nextStep.name =='air' || nextStep.name =='water' || nextStep.name =='lava')
+		errors.sendError(bot,owner,"POSSIBLE_CAVE");
+}
+*/

@@ -1,0 +1,4 @@
+ pathfinder/index.js : 488  bot.setControlState('sneak',true)  et 
+                        501 mettre en commentaire(//bot.setControlState('sneak', false))
+
+bot : ajout d'un nouveau "state":string

@@ -1,0 +1,4 @@
+{
+    "LOGIN_CHECK" :"SELECT playerId FROM players WHERE username=? AND passwd=?",
+    "GET_BOTS" : "SELECT bots.username,bots.online,jobs.jobName FROM bots INNER JOIN jobs ON bots.jobId=jobs.jobId WHERE bots.playerId = ?"
+}
