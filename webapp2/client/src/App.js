@@ -4,6 +4,7 @@ import React, {useEffect, useReducer, useState} from "react";
 import { BrowserRouter as Router, Switch, Route,Routes, Link,useHistory} from 'react-router-dom';
 import Cookie from 'js-cookie';
 import{actions_buttons} from './ActionButton';
+const { spawn } = require('child_process');
 
 
 const SetCookie = (cookiename,value)=>{
@@ -31,9 +32,7 @@ function ActionPage(){
     loadData();
   },[]);
 
-  const onClick = (action) =>{
   
-  }
 
   return(
     <div className="App" >
@@ -69,6 +68,7 @@ function SessionPage() {
   const history = useHistory();
   const [bots,setbots] = useState([]);
   const [message,setmessage] = useState("");
+  const [online,setonline] = useState();
 
   if(!Cookie.get('user')) history.push("/");
 
@@ -82,13 +82,21 @@ function SessionPage() {
 
   const onClickName = (value) =>{
     //if(! value['online']) return alert("ce bot n'est pas connecté, appuyez sur connect/disconnect"); else{
-      console.log(value);
-      SetCookie("jobId",value['jobId']);
-      SetCookie("botname",value['username']);
-      SetCookie("image",value['jobName']);
-      history.push("/session/actions");
-    
+    console.log(value);
+    SetCookie("jobId",value['jobId']);
+    SetCookie("botname",value['username']);
+    SetCookie("image",value['jobName']);
+    history.push("/session/actions");
+}
 
+  const onClickConnect = (value) =>{
+    Axios.post("http://localhost:3001/session/connect", {
+      owner: Cookie.get('user'),
+      script:value["script"],
+      botname:value['username']
+    }).then((response)=>{
+      value['online'] = 1;
+    })
   }
 
   return(
@@ -113,7 +121,7 @@ function SessionPage() {
               <td><Link onClick={() => onClickName(value)}> {value["username"]} </Link></td>
               <td><img src={require("./assets/" + value["jobName"] + ".png")} width="40" /></td>
               <td>{value["online"]}</td>
-              <td><button> Connect/Disconnect </button></td>
+              <td><button onClick={()=>{onClickConnect(value)}}> Connect/Disconnect </button></td>
             </tr>
         )
       })}

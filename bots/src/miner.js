@@ -2,20 +2,23 @@ const pathfinder = require('mineflayer-pathfinder').pathfinder
 const Movements = require('mineflayer-pathfinder').Movements
 const { GoalNear} = require('mineflayer-pathfinder').goals
 const mineflayer = require('mineflayer');
-
 const utils = require("./commons/utils.js")
 const errors = require("./commons/errors.js")
 require('dotenv').config()
+
 var args = process.argv.slice(2);
+console.log(args);
+var owner = args[1];
+
 
 let digPos;
 var state ="";
-var owner = args[1];
+
 
 const bot = mineflayer.createBot({
 	host: "TestBot.aternos.me",
 	port : 31080,
-	username: args[0]});
+	username:args[0]});
 
 bot.loadPlugin(pathfinder);
 bot.once('spawn', ()=>{
@@ -25,20 +28,24 @@ bot.once('spawn', ()=>{
 	cosmicLooper();
 });
 
+bot.once('login',()=>{
+	console.log("logged");
+})
+
 //**************************************************************************************** */
 
 bot.on('whisper', async (username, message)=>{
-	if(username==owner){
+	user = message.split(' ')[0]; 
+	if(username=="AlphaBot" && user==owner){
 		if(utils.getOwnerPos(bot,owner)){
 			state = message.split(' '); 
-			bot.state = state[0];
+			bot.state = state[1];
 
-			if(state[0]=='mine'){
-				digPos = setMineLoop(state[1])
-				}
-			else if(state[0] =='come')
+			if(state[1]=='mine')
+				digPos = setMineLoop(state[2]);
+			else if(state[1] =='come')
 				setComeLoop();
-			else if(state[0] =='follow'){}
+			else if(state[1] =='follow'){}
 			
 			else
 				errors.sendError(bot,owner,"WRONG_REQUEST");
@@ -50,15 +57,15 @@ bot.on('whisper', async (username, message)=>{
 
 
 async function cosmicLooper() {
-	console.log("state : " + bot.state);
-	state[0] = bot.state;
 
-	if(state[0] == "mine")
-		await easyMineLoop(state[1],state[2]);
-	if(state[0] == "follow")
-		await utils.followLoop(state[1]);
+	state[1] = bot.state;
+
+	if(state[1] == "mine")
+		await easyMineLoop(state[2]);
+	if(state[1] == "follow")
+		await utils.followLoop(owner);
 		
-	setTimeout(cosmicLooper, process.env.LOOP_PERIOD);
+	setTimeout(cosmicLooper, 2000);
 }
 
 async function setMineLoop(facing,level){

@@ -3,7 +3,7 @@ const { Vec3 } = require('vec3');
 const MinecraftData = require("minecraft-data");
 const mineflayer = require('mineflayer');
 const Math = require("mathjs");
-const { e } = require("mathjs");
+
 
 const drop = (s) => {
 	for (slot of bot.inventory.slots) {

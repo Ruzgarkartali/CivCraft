@@ -1,5 +1,5 @@
 {
     "LOGIN_CHECK" :"SELECT playerId FROM players WHERE username=? AND passwd=?",
-    "GET_BOTS" : "SELECT bots.username,bots.online,jobs.jobName,bots.jobId FROM bots INNER JOIN jobs ON bots.jobId=jobs.jobId WHERE bots.playerId = ?",
+    "GET_BOTS" : "SELECT bots.username,bots.online,jobs.jobName,bots.jobId, jobs.script FROM bots INNER JOIN jobs ON bots.jobId=jobs.jobId WHERE bots.playerId = ?",
     "GET_ACTIONS" : "SELECT actions.actionName FROM actions INNER JOIN canDo ON canDo.actionId = actions.actionId WHERE canDo.jobId = ? "
 }

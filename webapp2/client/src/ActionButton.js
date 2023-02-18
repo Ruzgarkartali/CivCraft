@@ -1,11 +1,15 @@
 import Cookie from 'js-cookie';
-import {bot} from '../../../bots/src/AlphaBot/AlphaBot';
+import Axios from 'axios';
+
 
 function MineButton(){
 
   const onClick=(facing) =>{
-   //bot.whisper(Cookie.get("botname"),Cookie.get("user") +" mine " + facing);
-   bot.chat(Cookie.get("user") +" mine " + facing);
+    Axios.post("http://localhost:3001/session/actions/order", {
+      owner: Cookie.get("user"),
+      order:"mine "+facing,
+      botname:Cookie.get("botname")
+    })
   }
 
     return (
@@ -33,9 +37,17 @@ function MineButton(){
 }
 
 function FollowButton(){
+
+  const onClick=() =>{
+    Axios.post("http://localhost:3001/session/actions/order", {
+      owner: Cookie.get("user"),
+      order:"follow",
+      botname:Cookie.get("botname")
+    })};
+
  return(
   <div>
-    <button id="actions">Follow me</button> 
+    <button onClick={()=>{onClick()}} id="actions">Follow me</button> 
   </div>
  );
 }
@@ -48,6 +60,8 @@ function farm(){
 }
 
 function drop(){
+
+
   return(
     <div>
       <button id="actions">Drop all resources</button> 
@@ -56,9 +70,17 @@ function drop(){
 }
 
 function come(){
+
+  const onClick=() =>{
+    Axios.post("http://localhost:3001/session/actions/order", {
+      owner: Cookie.get("user"),
+      order:"come",
+      botname:Cookie.get("botname")
+    })};
+
   return(
     <div>
-      <button id="actions">Come here</button> 
+      <button onClick={()=>{onClick()}} id="actions">Come here</button> 
     </div>
    );
 }
@@ -75,6 +97,5 @@ export const actions_buttons = (action) => {
   case "follow":return FollowButton();break;
   case "drop":return drop();break;
   case "come":return come();break;
-
   }
 }

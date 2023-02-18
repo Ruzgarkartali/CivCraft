@@ -1,5 +1,8 @@
 {
   "dependencies": {
-    "mineflayer": "^4.8.1"
+    "dotenv": "^16.0.3",
+    "mathjs": "^11.5.1",
+    "mineflayer": "^4.8.1",
+    "mineflayer-pathfinder": "^2.4.2"
   }
 }
