@@ -69,12 +69,6 @@ const nextStep = (bot,facing)=>{
 	return bot.blockAt(dir1[facing]);
 }
 
-function sleep(ms) {
-	return new Promise((resolve) => {
-	  setTimeout(resolve, ms);
-	});
-  }
-
 const dig = async (bot,owner,block) => {
 	await bot.lookAt(block.position);
 
@@ -127,6 +121,11 @@ const followLoop = async (username) => {
 	bot.pathfinder.setGoal(new GoalNear(p.x, p.y, p.z, 2))
 }
 
+const sleep = async (ms) => {
+	return new Promise((resolve) => {
+	  setTimeout(resolve, ms);
+	});
+}
 
 exports.drop = drop;
 exports.getOwnerPos = getOwnerPos;
@@ -138,3 +137,4 @@ exports.dig = dig;
 exports.dest = dest;
 exports.nextStep = nextStep;
 exports.followLoop = followLoop;
+exports.sleep = sleep;

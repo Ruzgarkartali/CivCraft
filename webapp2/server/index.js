@@ -9,6 +9,8 @@ app.use(express.json());
 app.use(cors());
 const { spawnSync } = require('child_process');
 const path = require('path');
+const { Worker } = require('worker_threads');
+
 
 let botlist = [];
 
@@ -55,15 +57,14 @@ app.post("/session/actions/order",(req,res) => {
 });
 
 app.post("/session/connect",(req,res) => {
-    let owner = req.body.owner;
-    let script = req.body.script;
-    let botname = req.body.botname;
-
-    let chemin = path.join(__dirname,'..','..','bots','src',script);
-
-    botlist.push(spawnSync('node',[chemin,botname,owner],{
+    let chemin = path.join(__dirname,'..','..','bots','src',req.body.script);
+    let args = [chemin,req.body.owner,req.body.botname];
+    new Worker()
+    /*
+    botlist.push(spawnSync('node',args,{
         maxBuffer:  512 * 1024
     }));
+    */
 
     console.log(child.stdout.toString());
 });

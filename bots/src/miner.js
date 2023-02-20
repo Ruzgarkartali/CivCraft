@@ -1,14 +1,21 @@
-const pathfinder = require('mineflayer-pathfinder').pathfinder
-const Movements = require('mineflayer-pathfinder').Movements
-const { GoalNear} = require('mineflayer-pathfinder').goals
+const pathfinder = require('mineflayer-pathfinder').pathfinder;
+const Movements = require('mineflayer-pathfinder').Movements;
+const { GoalNear} = require('mineflayer-pathfinder').goals;
 const mineflayer = require('mineflayer');
-const utils = require("./commons/utils.js")
-const errors = require("./commons/errors.js")
-require('dotenv').config()
+const utils = require("./commons/utils.js");
+const errors = require("./commons/errors.js");
+require('dotenv').config();
+const { workerData, parentPort } = require('worker_threads');
 
-var args = process.argv.slice(2);
-console.log(args);
-var owner = args[1];
+console.log("maxime est rentré");
+
+let owner;
+let botname;
+
+parentPort.on('message', (msg) => {
+	console.log("ddd");
+	console.log(msg);
+});
 
 
 let digPos;
@@ -18,7 +25,7 @@ var state ="";
 const bot = mineflayer.createBot({
 	host: "TestBot.aternos.me",
 	port : 31080,
-	username:args[0]});
+	username:botname});
 
 bot.loadPlugin(pathfinder);
 bot.once('spawn', ()=>{
