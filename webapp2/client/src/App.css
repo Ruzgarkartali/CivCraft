@@ -98,3 +98,27 @@
   height: 1px;
   background: black;
 }
+
+.red-dot {
+  height: 10px;
+  width: 10px;
+  background-color: #e40808;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.orange-dot {
+  height: 10px;
+  width: 10px;
+  background-color: #e48508;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.green-dot {
+  height: 10px;
+  width: 10px;
+  background-color: #158000;
+  border-radius: 50%;
+  display: inline-block;
+}

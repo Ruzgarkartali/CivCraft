@@ -3,7 +3,7 @@ import Axios from 'axios';
 import React, {useEffect, useReducer, useState} from "react";
 import { BrowserRouter as Router, Switch, Route,Routes, Link,useHistory} from 'react-router-dom';
 import Cookie from 'js-cookie';
-import{actions_buttons} from './ActionButton';
+import{actions_buttons} from './components/ActionButton';
 const { spawn } = require('child_process');
 
 
@@ -68,7 +68,13 @@ function SessionPage() {
   const history = useHistory();
   const [bots,setbots] = useState([]);
   const [message,setmessage] = useState("");
-  const [online,setonline] = useState();
+  const [online,setonline] = useState([]);
+
+  function onlineMode(i){
+    if(i==0) return(<div><span class="red-dot"></span> offline</div>)
+    if(i==1) return(<div><span class="green-dot"></span> online</div>)
+    if(i==2) return(<div><span class="orange-dot"></span> connecting ...</div>)
+  }
 
   if(!Cookie.get('user')) history.push("/");
 
@@ -89,15 +95,46 @@ function SessionPage() {
     history.push("/session/actions");
 }
 
-  const onClickConnect = (value) =>{
-    Axios.post("http://localhost:3001/session/connect", {
-      owner: Cookie.get('user'),
-      script:value["script"],
-      botname:value['username']
-    }).then((response)=>{
-      value['online'] = 1;
-    })
-  }
+  const onClickConnect =  async (value,index) =>{
+    if(bots[index]['online'] == 0){
+      updateOnline(2,index);
+      await Axios.post("http://localhost:3001/session/connect", {
+        owner: Cookie.get('user'),
+        script:value["script"],
+        botname:value['username']
+      }).then((response)=>{
+        if(response.data== "logged"){
+          updateOnline(1,index);
+        }
+        if(response.data== "exit"){
+          updateOnline(0,index);
+        }
+      })
+    }
+
+    if(bots[index]['online'] == 1){
+      await Axios.post("http://localhost:3001/session/disconnect", {
+        botname:value['username']
+      }).then((response)=>{
+        if(response.data== "logged"){
+          updateOnline(1,index);
+        }
+        if(response.data== "exit"){
+          updateOnline(0,index);
+        }
+      })
+    }
+}
+
+  const updateOnline = (online,i) => {
+    setbots(
+        bots.map((value,index) =>
+            index === i
+                ? { ...value, online: online }
+                : { ...value }
+        )
+    );
+  };
 
   return(
       <div className="App" >
@@ -116,12 +153,13 @@ function SessionPage() {
             <th>Connexion</th>
           </tr>
       {bots.map((value,index)=>{
+        console.log('online : ' + value['online']);
         return(
           <tr>
               <td><Link onClick={() => onClickName(value)}> {value["username"]} </Link></td>
               <td><img src={require("./assets/" + value["jobName"] + ".png")} width="40" /></td>
-              <td>{value["online"]}</td>
-              <td><button onClick={()=>{onClickConnect(value)}}> Connect/Disconnect </button></td>
+              <td>{onlineMode(value["online"])}</td>
+              <td><button onClick={()=>{onClickConnect(value,index)}}> Connect/Disconnect </button></td>
             </tr>
         )
       })}

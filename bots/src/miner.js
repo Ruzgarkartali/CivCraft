@@ -6,26 +6,30 @@ const utils = require("./commons/utils.js");
 const errors = require("./commons/errors.js");
 require('dotenv').config();
 const { workerData, parentPort } = require('worker_threads');
+const { re } = require('mathjs');
+const { readSync } = require('fs');
 
 console.log("maxime est rentré");
 
-let owner;
-let botname;
+let owner=workerData["arg2"];
+let botname =workerData["arg1"];
 
+/*
 parentPort.on('message', (msg) => {
 	console.log("ddd");
 	console.log(msg);
 });
+*/
 
 
 let digPos;
 var state ="";
 
-
 const bot = mineflayer.createBot({
 	host: "TestBot.aternos.me",
 	port : 31080,
 	username:botname});
+
 
 bot.loadPlugin(pathfinder);
 bot.once('spawn', ()=>{
@@ -36,7 +40,10 @@ bot.once('spawn', ()=>{
 });
 
 bot.once('login',()=>{
-	console.log("logged");
+	parentPort.postMessage("logged");
+})
+bot.once('end',(reason)=>{
+	parentPort.postMessage("exit");
 })
 
 //**************************************************************************************** */
@@ -75,15 +82,17 @@ async function cosmicLooper() {
 	setTimeout(cosmicLooper, 2000);
 }
 
-async function setMineLoop(facing,level){
+async function setMineLoop(facing){
 	if(!Object.keys(utils.angle).includes(facing))
 		errors.sendError(bot,owner,"WRONG_ORIENTATION");
 
+		/*
 	if(!level)
 		errors.sendError(bot,owner,"WRONG_LEVEL");
+		*/
 
 	else{
-		var dest = utils.dest(bot.entity.position,facing,level);
+		var dest = utils.dest(bot.entity.position,facing);
 		bot.pathfinder.setGoal(new GoalNear(dest.x+0.5, dest.y, dest.z,0.1));
 	}
 	return dest;
@@ -103,8 +112,7 @@ async function easyMineLoop(facing){
 			errors.sendError(bot,owner,"POSSIBLE_CAVE");
 	}
 }
-
-
+console.log(workerData);
 
 
 

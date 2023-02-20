@@ -7,12 +7,35 @@ const reqs =  require('./sql_requests.json');
 const bot = require( '../../bots/src/AlphaBot');
 app.use(express.json());
 app.use(cors());
-const { spawnSync } = require('child_process');
 const path = require('path');
-const { Worker } = require('worker_threads');
+const { Worker, workerData } = require('worker_threads');
 
 
-let botlist = [];
+let n_bots = parseInt(process.env.N_BOTS);
+
+function createWorker(script,botname,owner,res){
+    let chemin = path.join(__dirname,'..','..','bots','src',script);
+    if(n_bots){
+        return new Promise((resolve,rejects)=>{
+            const worker = new Worker(chemin,{workerData:
+                {arg1:botname,arg2:owner}});
+
+            worker.on("message",(data)=>{
+                res.send(data);
+                if(data=="logged"){
+                    n_bots-=1;
+                    db.query(reqs["UPDATE_ONLINE"],[1,botname]);
+                }
+                if(data=="exit"){
+                    worker.terminate();
+                    n_bots+=1;
+                    db.query(reqs["UPDATE_ONLINE"],[0,botname]);
+                }
+            })
+            worker.on('error',(e)=>{console.log(e);n_bots+=1});
+        })
+    }else console.log("plus de place");
+}
 
 const db = mysql.createConnection({
     host:process.env.DB_HOST,
@@ -50,23 +73,23 @@ app.get("/session/actions/:jobId", (req,res) => {
 })
 
 app.post("/session/actions/order",(req,res) => {
-    let owner = req.body.owner;
-    let order = req.body.order;
-    let botname = req.body.botname;
-    bot.bot.whisper(botname,owner +" "+order);
+    bot.bot.whisper(req.body.botname,req.body.owner +" "+req.body.order);
 });
 
-app.post("/session/connect",(req,res) => {
+app.post("/session/connect",async (req,res) => {
     let chemin = path.join(__dirname,'..','..','bots','src',req.body.script);
-    let args = [chemin,req.body.owner,req.body.botname];
-    new Worker()
-    /*
-    botlist.push(spawnSync('node',args,{
-        maxBuffer:  512 * 1024
-    }));
-    */
+    const result = await createWorker(req.body.script,req.body.botname,req.body.owner,res);
+  
+});
 
-    console.log(child.stdout.toString());
+app.post("/session/disconnect",(req,res)=>{
+    bot.bot.chat('kick ' + req.body.botname);
+    bot.bot.chat('/kick ' + req.body.botname);
+
+    db.query(reqs["UPDATE_ONLINE"],[0,req.body.botname],(e,r)=>{
+        if(e) res.send({e:e});
+        else  res.send('exit');
+    });
 });
 
 app.listen(3001,()=>{

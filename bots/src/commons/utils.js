@@ -58,7 +58,8 @@ const BlocksToDig = (bot,facing)=>{
 	return blocksList;
 }
 
-const dest = (digPos,facing,level)=>{
+const dest = (digPos,facing)=>{
+	level = 16;
 	let dir1 = {"nord": digPos.offset(0,-level,-level), "sud":  digPos.offset(0,-level,level), "ouest" : digPos.offset(-level,-level,0),"est" :  digPos.offset(level,-level,0)};
 	return dir1[facing];
 }
