@@ -9,7 +9,7 @@ app.use(express.json());
 app.use(cors());
 const path = require('path');
 const { Worker, workerData } = require('worker_threads');
-
+console.clear();
 
 let n_bots = parseInt(process.env.N_BOTS);
 
@@ -93,7 +93,18 @@ app.post("/session/disconnect",(req,res)=>{
 });
 
 app.listen(3001,()=>{
-    console.log("running server");
+  
+    console.log('\x1b[42m%s\x1b[0m',"don't forget to connect to VPN !");
+
+
+    //connection to db
+    db.connect((e,r)=>{
+        if(e) console.log('\x1b[31m%s\x1b[0m','ERROR ' + e.message);
+        else console.log('connected to db ! ');
+    });
+
+
+    console.log("running server ...");
 });
 
 

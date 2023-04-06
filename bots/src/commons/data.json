@@ -1,0 +1,76 @@
+{
+    "errors":{
+
+        "NO_PICKAXE":"je n'ai pas de pioche sur moi !",
+
+        "WRONG_ORIENTATION": "Je n'ai pas compris l'orientation. Réessayez (nord/sud/est/ouest)",
+    
+        "TOO_FAR" :"Tu es trop loin pour que je t'entende. Rapproche-toi",
+    
+        "NOT_OWNER" :"Tu n'es pas mon maitre !",
+    
+        "NO_AXE":"je n'ai pas de hache sur moi !",
+    
+        "POSSIBLE_CAVE":"il y a un vide, je ne peux pas continuer. C'est possiblement une caverne",
+    
+        "NOT_DIGGABLE" :"Je ne peux pas casser ce bloc",
+    
+        "LAVA":"Il y a de la lave !",
+    
+        "NO_SHOVEL":"je n'ai pas de pelle sur moi !",
+    
+        "WRONG_REQUEST":"je n'ai pas compris ce que tu veux. Verifie ta requete",
+    
+        "WRONG_LEVEL" :"Je n'ai pas compris le nombre de couches que je dois descendre",
+        
+        "NULL":"Erreur d'execution. Rapportez cette erreur à un admin",
+
+        "NO_SCAFF":"Je n'ai rien pour grimper ! Il me faut des échafaudages.",
+
+        "NO_WOOD":"Il n'y a plus de bois dans la zone",
+
+        "NO_FARMZONE":"Tu n'as pas encore défini la zone de ton terrain ! C'est important poue que j'évite de ramasser le blé des autres. Pour ce faire, tu dois tout simplement te positionner sur un bloc "
+    },
+    "bests": {
+
+        "PICKAXE" : ["wooden_pickaxe","stone_pickaxe","iron_pickaxe","golden_pickaxe","diamond_pickaxe","netherite_pickaxe"],
+
+        "AXE" : ["wooden_axe","stone_axe","iron_axe","golden_axe","diamond_axe","netherite_axe"],
+
+        "SHOVEL":["wooden_shovel","stone_shovel","iron_shovel","golden_shovel","diamond_shovel","netherite_shovel"],
+
+        "HOE":["wooden_hoe","stone_hoe","iron_hoe","golden_hoe","diamond_hoe","netherite_hoe"]
+        
+    },
+    "trees" : ["oak_log","spruce_log","birch_log","jungle_log","acacia_log","dark_oak_log","stripped_oak_log","stripped_spruce_log","stripped_birch_log","stripped_jungle_log","stripped_acacia_log","stripped_dark_oak_log"],
+
+    "works":{
+        "miner":["come","drop","follow","mine"]
+    },
+    "scaffolding":["scaffolding"],
+    
+    "harvests":[
+        {
+            "seed":"wheat_seeds",
+            "harvest":"wheat",
+            "metadata":7
+        },
+        {
+            "seed":"beetroot_seeds",
+            "harvest":"beetroots",
+            "metadata":3
+        },
+        {
+            "seed":"potato",
+            "harvest":"potatoes",
+            "metadata":7
+        },
+        {
+            "seed":"carrot",
+            "harvest":"carrots",
+            "metadata":7
+        }
+        
+    ]  
+        
+}

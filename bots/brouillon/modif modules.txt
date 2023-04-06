@@ -2,3 +2,5 @@
                         501 mettre en commentaire(//bot.setControlState('sneak', false))
 
 bot : ajout d'un nouveau "state":string
+
+D:\Projects\CivCraft\CivCraft\bots\node_modules\minecraft-protocol\src\client\keepalive.js : mettre le timeout grand

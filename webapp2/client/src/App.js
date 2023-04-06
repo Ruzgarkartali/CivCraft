@@ -184,12 +184,13 @@ function LoginPage() {
     Axios.post("http://localhost:3001/login", {
       user:user,
       pass:pass
-    }).then((response) => {
-      console.log(response.data[0]);
-      if (!response.data) setmessage("Mauvais nom d'utilisateur ou mauvais mot de passe !");
+    }).then((r) => {
+      let res = r.data.length;
+      console.log(res);
+      if (!res) setmessage("Mauvais nom d'utilisateur ou mauvais mot de passe !");
       else{
         SetCookie('user',user);
-        SetCookie('id',response.data[0]["playerId"]);
+        SetCookie('id',r.data[0]["playerId"]);
         history.push("/session");
       }
     });

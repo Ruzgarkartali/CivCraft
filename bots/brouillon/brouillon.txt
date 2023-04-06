@@ -92,3 +92,48 @@ async function mineLoop(facing,level=16){
 		errors.sendError(bot,owner,"POSSIBLE_CAVE");
 }
 */
+
+export const dig = async (Bot:MCBot,block:Block) => {
+	await Bot.bot.lookAt(block.position);
+
+	if (block.diggable==false)
+		errors.sendError(bot,owner,"NOT_DIGGABLE");
+	if(block.name=='lava')
+		errors.sendError(bot,owner,"LAVA")
+	
+	let bestTool = '';
+	let liste = block.material.split('/');
+
+	for (const key of Object.keys(bests)) {
+		if (liste.find(element => element == key))
+			bestTool = key.toUpperCase();
+	}
+
+    try{
+		await equipBest(bot,owner,bestTool);
+        await bot.dig(block);
+    }catch(e){
+        console.log(e);
+    }
+}
+export const getOwnerPos = (Bot:MCBot) => {
+    var player = Bot.bot.nearestEntity(e =>e.username==Bot.owner && e.type=='player');
+	if(!player)
+		return new MCError(Bot,"NULL");
+    let pos = player.position;
+    if(Bot.bot.entity.position.distanceTo(pos) > 16)
+    	return new MCError(Bot,"TOO_FAR");
+    return new Vec3(pos.x,pos.y,pos.z);
+}
+
+export const BlocksToDig = (Bot:MCBot,facing:string)=>{
+	let digPos = Bot.bot.entity.position;
+	let dir1 = {"nord": digPos.offset(0,0,-1), "sud":  digPos.offset(0,0,1), "ouest" : digPos.offset(-1,0,0),"est" :  digPos.offset(1,0,0)};
+	let XZ = dir1[facing];
+	let blocksList = [
+        Bot.bot.blockAt(XZ.offset(0,1,0)),
+		Bot.bot.blockAt(XZ),
+		Bot.bot.blockAt(XZ.offset(0,-1,0))//descend de -1
+	];
+	return blocksList;
+}
